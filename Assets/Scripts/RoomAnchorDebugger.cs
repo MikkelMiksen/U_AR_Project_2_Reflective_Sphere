@@ -133,6 +133,7 @@ public class RoomAnchorDebugger : MonoBehaviour
             }
         }
 
-        Debug.Log($"{Tag} Room visuals visible={visible} ({toggled} renderers toggled).");
+        Debug.Log($"{Tag} Room visuals visible={visible} " +
+                  $"(rooms={MRUK.Instance.Rooms.Count}, {toggled} renderers toggled).");
     }
 }
