@@ -39,7 +39,7 @@ public class ReflectiveSphereMotion : MonoBehaviour
             return;
         }
 
-        ReflectionProbe[] probes = FindObjectsByType<ReflectionProbe>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        ReflectionProbe[] probes = FindObjectsByType<ReflectionProbe>(FindObjectsInactive.Include);
         if (probes != null && probes.Length > 0)
         {
             probe = probes[0];
