@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 /// <summary>
 /// Milestone 1 helper for the reflective-sphere demo.
@@ -91,11 +92,14 @@ public class ReflectiveSphereProbeSetup : MonoBehaviour
             return;
         }
 
-        probe.type = UnityEngine.Rendering.ReflectionProbeType.Cube;
-        probe.mode = UnityEngine.Rendering.ReflectionProbeMode.Realtime;
-        probe.refreshMode = UnityEngine.Rendering.RefreshMode.EveryFrame;
-        probe.timeSlicingMode = UnityEngine.Rendering.ReflectionProbeTimeSlicingMode.Off;
-        probe.clearFlags = CameraClearFlags.Skybox;
+#pragma warning disable CS0618
+        probe.type = ReflectionProbeType.Cube;
+#pragma warning restore CS0618
+
+        probe.mode = ReflectionProbeMode.Realtime;
+        probe.refreshMode = ReflectionProbeRefreshMode.EveryFrame;
+        probe.timeSlicingMode = ReflectionProbeTimeSlicingMode.Off;
+        probe.clearFlags = ReflectionProbeClearFlags.Skybox;
         probe.resolution = probeResolution;
         probe.size = probeSize;
         probe.nearClipPlane = 0.1f;
