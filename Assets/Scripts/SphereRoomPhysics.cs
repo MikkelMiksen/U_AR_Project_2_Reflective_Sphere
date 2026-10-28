@@ -27,18 +27,18 @@ public class SphereRoomPhysics : MonoBehaviour
         sphereCollider = GetComponent<SphereCollider>();
 
         rb.mass = 1f;
-        rb.drag = 0.05f;
-        rb.angularDrag = 0.1f;
+        rb.linearDamping = 0.05f;
+        rb.angularDamping = 0.1f;
         rb.useGravity = true;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
-        PhysicMaterial material = new PhysicMaterial("SphereRoomBounce");
+        PhysicsMaterial material = new PhysicsMaterial("SphereRoomBounce");
         material.bounciness = bounciness;
         material.dynamicFriction = friction;
         material.staticFriction = friction;
-        material.bounceCombine = PhysicMaterialCombine.Maximum;
-        material.frictionCombine = PhysicMaterialCombine.Average;
+        material.bounceCombine = PhysicsMaterialCombine.Maximum;
+        material.frictionCombine = PhysicsMaterialCombine.Average;
         sphereCollider.material = material;
 
         transform.position = startPosition;
@@ -53,7 +53,7 @@ public class SphereRoomPhysics : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            rb.velocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             rb.AddForce(Vector3.forward * throwForce, ForceMode.VelocityChange);
         }
@@ -61,7 +61,7 @@ public class SphereRoomPhysics : MonoBehaviour
 
     private void Respawn()
     {
-        rb.velocity = Vector3.zero;
+        rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         transform.position = startPosition;
     }
