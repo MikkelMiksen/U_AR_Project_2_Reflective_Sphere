@@ -33,12 +33,12 @@ public class SphereRoomPhysics : MonoBehaviour
         rb.interpolation = RigidbodyInterpolation.Interpolate;
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
-        PhysicMaterial material = new PhysicMaterial("SphereRoomBounce");
+        PhysicsMaterial material = new PhysicsMaterial("SphereRoomBounce");
         material.bounciness = bounciness;
         material.dynamicFriction = friction;
         material.staticFriction = friction;
-        material.bounceCombine = PhysicMaterialCombine.Maximum;
-        material.frictionCombine = PhysicMaterialCombine.Average;
+        material.bounceCombine = PhysicsMaterialCombine.Maximum;
+        material.frictionCombine = PhysicsMaterialCombine.Average;
         sphereCollider.material = material;
 
         transform.position = startPosition;
