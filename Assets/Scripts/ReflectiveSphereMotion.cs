@@ -39,8 +39,14 @@ public class ReflectiveSphereMotion : MonoBehaviour
             return;
         }
 
-        probe = FindAnyObjectByType<ReflectionProbe>(true);
-        if (probe == null && !hasWarnedAboutMissingProbe)
+        ReflectionProbe[] probes = FindObjectsByType<ReflectionProbe>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        if (probes != null && probes.Length > 0)
+        {
+            probe = probes[0];
+            return;
+        }
+
+        if (!hasWarnedAboutMissingProbe)
         {
             hasWarnedAboutMissingProbe = true;
             Debug.LogWarning($"[{nameof(ReflectiveSphereMotion)}] No ReflectionProbe was found in the scene. Assign one in the Inspector or add a probe to the scene.", this);
