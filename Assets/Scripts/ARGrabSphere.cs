@@ -16,12 +16,14 @@ public class ARGrabSphere : MonoBehaviour
     private bool isGrabbed;
     private Transform grabAnchor;
     private Vector3 offset;
+    private Camera trackedCamera;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         rb.interpolation = RigidbodyInterpolation.Interpolate;
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        ResolveGrabCamera();
     }
 
     private void Update()
@@ -43,6 +45,37 @@ public class ARGrabSphere : MonoBehaviour
         }
     }
 
+    private void ResolveGrabCamera()
+    {
+        trackedCamera = Camera.main;
+        if (trackedCamera == null)
+        {
+            trackedCamera = FindAnyObjectByType<Camera>();
+        }
+
+        if (trackedCamera == null)
+        {
+            Debug.LogWarning($"[{nameof(ARGrabSphere)}] No camera found for grab interaction. Add a camera to the scene or assign one in the inspector.", this);
+        }
+    }
+
+    private bool TryGetGrabCamera(out Camera camera)
+    {
+        if (trackedCamera == null)
+        {
+            ResolveGrabCamera();
+        }
+
+        camera = trackedCamera;
+        if (camera == null)
+        {
+            Debug.LogWarning($"[{nameof(ARGrabSphere)}] Grab failed because no valid camera is available.", this);
+            return false;
+        }
+
+        return true;
+    }
+
     private void TryGrab()
     {
         if (isGrabbed)
@@ -50,7 +83,12 @@ public class ARGrabSphere : MonoBehaviour
             return;
         }
 
-        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
+        if (!TryGetGrabCamera(out Camera camera))
+        {
+            return;
+        }
+
+        Ray ray = camera.ScreenPointToRay(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
         if (Physics.Raycast(ray, out RaycastHit hit, grabDistance, grabLayerMask.value, QueryTriggerInteraction.Ignore))
         {
             if (hit.collider.gameObject != gameObject)
@@ -59,7 +97,7 @@ public class ARGrabSphere : MonoBehaviour
             }
         }
 
-        if (Vector3.Distance(transform.position, Camera.main.transform.position) > grabDistance)
+        if (Vector3.Distance(transform.position, camera.transform.position) > grabDistance)
         {
             return;
         }
@@ -68,7 +106,7 @@ public class ARGrabSphere : MonoBehaviour
         rb.isKinematic = true;
         rb.useGravity = false;
 
-        grabAnchor = Camera.main.transform;
+        grabAnchor = camera.transform;
         offset = transform.position - grabAnchor.position;
     }
 

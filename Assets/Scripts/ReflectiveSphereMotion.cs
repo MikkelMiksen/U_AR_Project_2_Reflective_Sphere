@@ -18,22 +18,32 @@ public class ReflectiveSphereMotion : MonoBehaviour
 
     private Vector3 startPosition;
     private float phase;
+    private bool hasWarnedAboutMissingProbe;
 
     private void Reset()
     {
         startPosition = transform.position;
-        if (probe == null)
-        {
-            probe = FindObjectOfType<ReflectionProbe>();
-        }
+        ResolveProbe();
     }
 
     private void Awake()
     {
         startPosition = transform.position;
-        if (probe == null)
+        ResolveProbe();
+    }
+
+    private void ResolveProbe()
+    {
+        if (probe != null)
         {
-            probe = FindObjectOfType<ReflectionProbe>();
+            return;
+        }
+
+        probe = FindObjectOfType<ReflectionProbe>(true);
+        if (probe == null && !hasWarnedAboutMissingProbe)
+        {
+            hasWarnedAboutMissingProbe = true;
+            Debug.LogWarning($"[{nameof(ReflectiveSphereMotion)}] No ReflectionProbe was found in the scene. Assign one in the Inspector or add a probe to the scene.", this);
         }
     }
 
@@ -52,6 +62,11 @@ public class ReflectiveSphereMotion : MonoBehaviour
         else
         {
             transform.position += moveAxis * moveSpeed * Time.deltaTime;
+        }
+
+        if (probe == null)
+        {
+            ResolveProbe();
         }
 
         if (probe != null)

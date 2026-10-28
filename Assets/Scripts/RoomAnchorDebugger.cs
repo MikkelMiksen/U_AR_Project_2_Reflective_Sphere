@@ -23,15 +23,12 @@ public class RoomAnchorDebugger : MonoBehaviour
 
     private void Start()
     {
-        // Start (not Awake) so MRUK.Instance has already been created by its own Awake.
         if (MRUK.Instance == null)
         {
             Debug.LogError($"{Tag} No MRUK component in the scene. Add the MR Utility Kit building block.");
             return;
         }
 
-        // Calls OnSceneLoaded when the room data is ready
-        // (immediately, if it has already loaded).
         MRUK.Instance.RegisterSceneLoadedCallback(OnSceneLoaded);
     }
 
@@ -46,7 +43,19 @@ public class RoomAnchorDebugger : MonoBehaviour
 
     private void OnSceneLoaded()
     {
+        if (MRUK.Instance == null || MRUK.Instance.Rooms == null)
+        {
+            Debug.LogWarning($"{Tag} Room data is not available yet. Scene may still be loading.");
+            return;
+        }
+
         Debug.Log($"{Tag} Scene loaded. Rooms: {MRUK.Instance.Rooms.Count}");
+
+        if (MRUK.Instance.Rooms.Count == 0)
+        {
+            Debug.LogWarning($"{Tag} No MRUK rooms were found. Rerun Space Setup on the headset.");
+            return;
+        }
 
         foreach (MRUKRoom room in MRUK.Instance.Rooms)
         {
@@ -58,7 +67,6 @@ public class RoomAnchorDebugger : MonoBehaviour
     {
         Debug.Log($"{Tag} Room '{room.name}' has {room.Anchors.Count} anchors.");
 
-        // Step 1: log each anchor and count how many we have per label.
         Dictionary<string, int> countsByLabel = new Dictionary<string, int>();
 
         foreach (MRUKAnchor anchor in room.Anchors)
@@ -77,7 +85,6 @@ public class RoomAnchorDebugger : MonoBehaviour
                 $"size={DescribeSize(anchor)}");
         }
 
-        // Step 2: print a one-line summary of the counts.
         StringBuilder summary = new StringBuilder($"{Tag} Summary: ");
         foreach (KeyValuePair<string, int> pair in countsByLabel)
         {
@@ -85,7 +92,6 @@ public class RoomAnchorDebugger : MonoBehaviour
         }
         Debug.Log(summary.ToString());
 
-        // Step 3: warn if a surface we depend on for collisions is missing.
         WarnIfMissing(countsByLabel, "FLOOR");
         WarnIfMissing(countsByLabel, "CEILING");
         WarnIfMissing(countsByLabel, "WALL_FACE");
@@ -99,7 +105,6 @@ public class RoomAnchorDebugger : MonoBehaviour
         }
     }
 
-    // Anchors are either volumes (furniture) or planes (walls, floor, ceiling).
     private string DescribeSize(MRUKAnchor anchor)
     {
         if (anchor.VolumeBounds.HasValue)
@@ -115,10 +120,14 @@ public class RoomAnchorDebugger : MonoBehaviour
         return "no bounds";
     }
 
-    // Assumption: EffectMesh parents its generated objects under the anchors.
-    // The log line below tells you if that was wrong (0 renderers toggled).
     private void SetRoomVisualsVisible(bool visible)
     {
+        if (MRUK.Instance == null || MRUK.Instance.Rooms == null)
+        {
+            Debug.LogWarning($"{Tag} Cannot toggle room visuals because MRUK room data is not available.");
+            return;
+        }
+
         int toggled = 0;
 
         foreach (MRUKRoom room in MRUK.Instance.Rooms)
