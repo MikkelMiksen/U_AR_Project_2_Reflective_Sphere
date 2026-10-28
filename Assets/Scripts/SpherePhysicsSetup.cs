@@ -35,12 +35,12 @@ public class SpherePhysicsSetup : MonoBehaviour
         body.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
         // Step 2: bounce material. Created at runtime so no asset is required.
-        PhysicsMaterial bounceMaterial = new PhysicsMaterial("SphereBounce");
+        PhysicMaterial bounceMaterial = new PhysicMaterial("SphereBounce");
         bounceMaterial.bounciness = bounciness;
         bounceMaterial.dynamicFriction = friction;
         bounceMaterial.staticFriction = friction;
-        bounceMaterial.bounceCombine = PhysicsMaterialCombine.Maximum;
-        bounceMaterial.frictionCombine = PhysicsMaterialCombine.Average;
+        bounceMaterial.bounceCombine = PhysicMaterialCombine.Maximum;
+        bounceMaterial.frictionCombine = PhysicMaterialCombine.Average;
 
         sphereCollider.material = bounceMaterial;
     }
