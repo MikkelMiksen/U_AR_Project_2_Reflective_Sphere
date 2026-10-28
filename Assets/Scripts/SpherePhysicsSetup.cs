@@ -5,7 +5,7 @@ using UnityEngine;
 /// applies a bouncy PhysicsMaterial created in code (no asset needed), and
 /// respawns the sphere if it ever falls out of the room.
 ///
-/// Status: written for Unity 6 APIs (PhysicsMaterial, linearVelocity).
+/// Status: written for Unity 6 APIs (PhysicMaterial, linearVelocity).
 /// NOT compiled, NOT built, NOT tested on a headset.
 /// </summary>
 [RequireComponent(typeof(Rigidbody))]
@@ -35,12 +35,12 @@ public class SpherePhysicsSetup : MonoBehaviour
         body.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
         // Step 2: bounce material. Created at runtime so no asset is required.
-        PhysicsMaterial bounceMaterial = new PhysicsMaterial("SphereBounce");
+        PhysicMaterial bounceMaterial = new PhysicMaterial("SphereBounce");
         bounceMaterial.bounciness = bounciness;
         bounceMaterial.dynamicFriction = friction;
         bounceMaterial.staticFriction = friction;
-        bounceMaterial.bounceCombine = PhysicsMaterialCombine.Maximum;
-        bounceMaterial.frictionCombine = PhysicsMaterialCombine.Average;
+        bounceMaterial.bounceCombine = PhysicMaterialCombine.Maximum;
+        bounceMaterial.frictionCombine = PhysicMaterialCombine.Average;
 
         sphereCollider.material = bounceMaterial;
     }
