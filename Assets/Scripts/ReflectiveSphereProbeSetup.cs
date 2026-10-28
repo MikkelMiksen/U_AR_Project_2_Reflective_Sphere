@@ -98,13 +98,15 @@ public class ReflectiveSphereProbeSetup : MonoBehaviour
 
         probe.mode = ReflectionProbeMode.Realtime;
         probe.refreshMode = ReflectionProbeRefreshMode.EveryFrame;
-        probe.timeSlicingMode = ReflectionProbeTimeSlicingMode.Off;
         probe.clearFlags = ReflectionProbeClearFlags.Skybox;
         probe.resolution = probeResolution;
         probe.size = probeSize;
         probe.nearClipPlane = 0.1f;
         probe.farClipPlane = 25f;
         probe.center = reflectiveSphere.transform.position + probeOffset;
+
+        // Avoid assigning time-slicing explicitly here: the enum values differ across Unity versions.
+        // A default probe with realtime mode is sufficient for this setup.
 
         // Render once immediately so the reflection is visible at runtime.
         probe.RenderProbe();
