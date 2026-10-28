@@ -92,10 +92,6 @@ public class ReflectiveSphereProbeSetup : MonoBehaviour
             return;
         }
 
-#pragma warning disable CS0618
-        probe.type = ReflectionProbeType.Cube;
-#pragma warning restore CS0618
-
         probe.mode = ReflectionProbeMode.Realtime;
         probe.refreshMode = ReflectionProbeRefreshMode.EveryFrame;
         probe.clearFlags = ReflectionProbeClearFlags.Skybox;
@@ -105,10 +101,8 @@ public class ReflectiveSphereProbeSetup : MonoBehaviour
         probe.farClipPlane = 25f;
         probe.center = reflectiveSphere.transform.position + probeOffset;
 
-        // Avoid assigning time-slicing explicitly here: the enum values differ across Unity versions.
-        // A default probe with realtime mode is sufficient for this setup.
-
-        // Render once immediately so the reflection is visible at runtime.
+        // Avoid assigning time-slicing explicitly here because the enum name varies by Unity version.
+        // Realtime mode alone is sufficient for this setup.
         probe.RenderProbe();
     }
 }

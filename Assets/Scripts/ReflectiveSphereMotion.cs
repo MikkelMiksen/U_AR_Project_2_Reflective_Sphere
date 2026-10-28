@@ -39,7 +39,7 @@ public class ReflectiveSphereMotion : MonoBehaviour
             return;
         }
 
-        probe = FindObjectOfType<ReflectionProbe>(true);
+        probe = FindAnyObjectByType<ReflectionProbe>(true);
         if (probe == null && !hasWarnedAboutMissingProbe)
         {
             hasWarnedAboutMissingProbe = true;
